@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Vessel {
+  id        Int       @id @default(autoincrement())
+  name      String
+  imoNo     Int       @unique
+  vesselType Int
+  dwt       Float
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  emissions Emission[]
+}
+
+model Emission {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  eid           Int
+  vesselId      Int
+  logId         BigInt
+  fromUtc       DateTime
+  toUtc         DateTime
+  met2wco2      Float
+  aet2wco2      Float
+  met2wch4      Float
+  aet2wch4      Float
+  met2wn2o      Float
+  aet2wn2o      Float
+  met2wco2e     Float
+  aet2wco2e     Float
+  met2wch4e     Float
+  aet2wch4e     Float
+  met2wn2oe     Float
+  aet2wn2oe     Float
+  met2wco2ew    Float
+  aet2wco2ew    Float
+  met2wch4ew    Float
+  aet2wch4ew    Float
+  met2wn2oew    Float
+  aet2wn2oew    Float
+  met2wco2ew2w  Float
+  aet2wco2ew2w  Float
+  met2wch4ew2w  Float
+  aet2wch4ew2w  Float
+  met2wn2oew2w  Float
+  aet2wn2oew2w  Float
+  eeoico2ew2w   Float
+  vessel        Vessel   @relation(fields: [vesselId], references: [id])
+} 
