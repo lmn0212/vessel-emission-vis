@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:14
+        image: postgres:15
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -25,64 +25,69 @@ jobs:
           --health-retries 5
 
     steps:
-    - uses: actions/checkout@v3
-
+    - uses: actions/checkout@v4
+    
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20'
         cache: 'npm'
-
-    - name: Install Backend Dependencies
-      working-directory: ./backend
-      run: npm ci
-
-    - name: Run Backend Tests
-      working-directory: ./backend
+        cache-dependency-path: backend/package-lock.json
+    
+    - name: Install dependencies
+      run: |
+        cd backend
+        npm ci
+    
+    - name: Run tests
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vessel_emissions_test
-      run: npm test
+      run: |
+        cd backend
+        npm test
 
   test-frontend:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-
+    - uses: actions/checkout@v4
+    
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20'
         cache: 'npm'
-
-    - name: Install Frontend Dependencies
-      working-directory: ./frontend
-      run: npm ci
-
-    - name: Run Frontend Tests
-      working-directory: ./frontend
-      run: npm test
+        cache-dependency-path: frontend/package-lock.json
+    
+    - name: Install dependencies
+      run: |
+        cd frontend
+        npm ci
+    
+    - name: Run tests
+      run: |
+        cd frontend
+        npm test
 
   lint:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-
+    - uses: actions/checkout@v4
+    
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20'
         cache: 'npm'
-
-    - name: Install Dependencies
+        cache-dependency-path: |
+          backend/package-lock.json
+          frontend/package-lock.json
+    
+    - name: Install dependencies
       run: |
-        npm ci
         cd backend && npm ci
         cd ../frontend && npm ci
-
+    
     - name: Run ESLint
       run: |
-        npm run lint
         cd backend && npm run lint
         cd ../frontend && npm run lint 
