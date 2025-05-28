@@ -44,19 +44,11 @@ COPY --from=builder /app/data ./data
 EXPOSE 3001
 
 # Create a startup script that waits for the database and runs migrations
-RUN echo '#!/bin/sh\n\
-echo "Waiting for database..."\n\
-while ! nc -z db 5432; do\n\
-  sleep 1\n\
-done\n\
-echo "Database is ready!"\n\
-npx prisma migrate deploy\n\
-npx prisma db seed\n\
-node dist/src/server.js' > /app/start.sh && \
-    chmod +x /app/start.sh
+RUN echo '#!/bin/sh\necho "Waiting for database..."\nwhile ! nc -z db 5432; do\n  sleep 1\ndone\necho "Database is ready!"\nexec "$@"' > /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh
 
 # Install netcat for the wait script
 RUN apt-get update && apt-get install -y netcat-traditional && rm -rf /var/lib/apt/lists/*
 
 # Start the application
-CMD ["/app/start.sh"] 
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["node", "dist/src/server.js"] 

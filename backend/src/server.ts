@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3002;
 // Load PP reference factors
 let ppFactors: any[];
 try {
-  const ppReferencePath = path.join(process.cwd(), 'src', 'data', 'pp-reference.json');
+  const ppReferencePath = path.join(process.cwd(), 'data', 'pp-reference.json');
   const ppReferenceContent = fs.readFileSync(ppReferencePath, 'utf-8');
   ppFactors = JSON.parse(ppReferenceContent);
   console.log(`Loaded ${ppFactors.length} PP reference factors`);
@@ -190,4 +190,4 @@ app.get('/api/vessels/:imo', async (req: Request, res: Response) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-}); 
+});
