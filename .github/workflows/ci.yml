@@ -38,6 +38,13 @@ jobs:
       run: |
         cd backend
         npm ci
+        npm list jest
+    
+    - name: Verify Jest configuration
+      run: |
+        cd backend
+        test -f jest.config.js && echo "Jest config file exists"
+        grep -q '"test": "jest"' package.json && echo "Jest test script found"
     
     - name: Run tests
       env:
@@ -62,6 +69,13 @@ jobs:
       run: |
         cd frontend
         npm ci
+        npm list jest
+    
+    - name: Verify Jest configuration
+      run: |
+        cd frontend
+        test -f jest.config.js && echo "Jest config file exists"
+        grep -q '"test": "jest"' package.json && echo "Jest test script found"
     
     - name: Run tests
       run: |
