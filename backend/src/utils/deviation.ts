@@ -1,6 +1,5 @@
 import { Emission, Vessel } from '@prisma/client';
-import { PPSSCPreferenceLine } from './pp-baselines';
-import { calculatePPSCCBaselines } from './pp-baselines';
+import { PPSSCPreferenceLine, calculatePPSCCBaselines } from './pp-baselines';
 
 export function calculateDeviation(
   emissions: Emission[],

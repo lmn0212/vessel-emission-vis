@@ -97,9 +97,9 @@ async function main() {
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
+  .catch((error) => {
+    console.error('Error seeding database:', error);
+    throw error;
   })
   .finally(async () => {
     await prisma.$disconnect();

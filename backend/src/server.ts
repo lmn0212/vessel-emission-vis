@@ -11,7 +11,7 @@ const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3002;
 
 // Load PP reference factors
-let ppFactors: any[];
+let ppFactors: [];
 try {
   const ppReferencePath = path.join(process.cwd(), 'data', 'pp-reference.json');
   const ppReferenceContent = fs.readFileSync(ppReferencePath, 'utf-8');
@@ -33,26 +33,34 @@ app.use(cors({
 app.use(express.json());
 
 // Helper function to convert BigInt to string in JSON
-function convertBigIntToString(obj: any): any {
+function convertBigIntToString<T>(obj: T): T extends bigint ? string : T  {
   if (obj === null || obj === undefined) {
-    return obj;
+    return obj as T extends bigint ? string : T;
   }
   if (typeof obj === 'bigint') {
-    return obj.toString();
+    return obj.toString() as T extends bigint ? string : T;
   }
   if (Array.isArray(obj)) {
-    return obj.map(convertBigIntToString);
+    return obj.map(convertBigIntToString) as T extends bigint ? string : T ;
   }
   if (typeof obj === 'object') {
-    const result: any = {};
+    const result: Record<string, unknown> = {};
     for (const key in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, key)) {
         result[key] = convertBigIntToString(obj[key]);
       }
     }
-    return result;
+    return result as T extends bigint ? string : T ;
   }
-  return obj;
+  return obj as T extends bigint ? string : T ;
+}
+
+interface Emission {
+  id: number;
+  toUtc: string | Date;
+  eeoico2ew2w: number;
+  met2wco2ew2w: number;
+  aet2wco2ew2w: number;
 }
 
 // Get all vessels with their deviations
@@ -69,7 +77,7 @@ app.get('/api/vessels', async (_req: Request, res: Response) => {
       console.log('First vessel sample:', JSON.stringify(convertBigIntToString(vessels[0]), null, 2));
     }
 
-    const vesselsWithDeviations = vessels.map((vessel: any) => {
+    const vesselsWithDeviations = vessels.map((vessel) => {
       try {
         if (!vessel.emissions || vessel.emissions.length === 0) {
           console.log(`No emissions data for vessel ${vessel.id}`);
@@ -81,7 +89,7 @@ app.get('/api/vessels', async (_req: Request, res: Response) => {
         }
 
         // Convert dates to ISO strings and ensure all values are properly serialized
-        const emissionsWithBaselines = vessel.emissions.map((emission: any) => {
+        const emissionsWithBaselines = vessel.emissions.map((emission) => {
           const toUtc = new Date(emission.toUtc).toISOString();
           const baseline = calculateBaseline(
             vessel.vesselType,
@@ -101,7 +109,7 @@ app.get('/api/vessels', async (_req: Request, res: Response) => {
         });
 
         // Sort by date
-        emissionsWithBaselines.sort((a: any, b: any) =>
+        emissionsWithBaselines.sort((a, b) =>
           new Date(b.toUtc).getTime() - new Date(a.toUtc).getTime()
         );
 
@@ -135,7 +143,7 @@ app.get('/api/vessels', async (_req: Request, res: Response) => {
         return {
           ...vessel,
           deviation: 0,
-          emissionsData: vessel.emissions.map((emission: any) => ({
+          emissionsData: vessel.emissions.map((emission) => ({
             ...emission,
             fromUtc: emission.fromUtc ? new Date(emission.fromUtc).toISOString() : null,
             toUtc: emission.toUtc ? new Date(emission.toUtc).toISOString() : null,
@@ -177,7 +185,7 @@ app.get('/api/vessels/:imo', async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Vessel not found' });
     }
 
-    const deviation = calculateDeviation(vessel.emissions as any[], {
+    const deviation = calculateDeviation(vessel.emissions as Emission[], {
       dwt: vessel.dwt,
       vesselType: vessel.vesselType
     }, ppFactors);

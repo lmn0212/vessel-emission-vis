@@ -8,8 +8,8 @@ COPY backend/package*.json ./
 COPY backend/tsconfig.json ./
 COPY backend/prisma ./prisma/
 
-# Install dependencies
-RUN npm ci
+# Install dependencies and update package-lock.json with legacy peer deps
+RUN npm install --legacy-peer-deps
 
 # Generate Prisma client
 RUN npx prisma generate
@@ -32,7 +32,7 @@ RUN apt-get update && apt-get install -y openssl libssl1.1 && rm -rf /var/lib/ap
 # Copy package files and install production dependencies only
 COPY backend/package*.json ./
 COPY backend/prisma ./prisma/
-RUN npm ci --only=production
+RUN npm install --only=production --legacy-peer-deps
 
 # Copy built files from builder stage
 COPY --from=builder /app/dist ./dist

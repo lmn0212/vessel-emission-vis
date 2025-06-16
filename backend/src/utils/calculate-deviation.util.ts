@@ -1,5 +1,6 @@
 import Decimal from 'decimal.js';
 import { calculatePPSCCBaselines } from './calculate-pp-scc-baselines.util';
+import { PPSSCPreferenceLine } from './pp-baselines';
 
 type Emission = {
   toUtc: string | Date;
@@ -14,7 +15,7 @@ type VesselInfo = {
 export const calculateDeviation = (
   emissions: Emission[],
   vesselInfo: VesselInfo,
-  factors: any[]
+  factors: PPSSCPreferenceLine[]
 ): number => {
   if (emissions.length === 0) return 0;
 
