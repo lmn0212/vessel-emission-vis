@@ -37,7 +37,7 @@ jobs:
     - name: Install dependencies
       run: |
         cd backend
-        npm ci
+        npm ci --legacy-peer-deps
         npm list jest
     
     - name: Verify Jest configuration
@@ -68,7 +68,7 @@ jobs:
     - name: Install dependencies
       run: |
         cd frontend
-        npm ci
+        npm ci --legacy-peer-deps
         npm list jest
     
     - name: Verify Jest configuration
@@ -98,8 +98,8 @@ jobs:
     
     - name: Install dependencies
       run: |
-        cd backend && npm ci
-        cd ../frontend && npm ci
+        cd backend && npm ci --legacy-peer-deps
+        cd ../frontend && npm ci --legacy-peer-deps
     
     - name: Run ESLint
       run: |
