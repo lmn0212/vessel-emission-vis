@@ -23,6 +23,9 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     "isolatedModules": true
   },
   "exclude": ["node_modules"],

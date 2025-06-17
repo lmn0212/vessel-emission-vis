@@ -3,52 +3,48 @@ const tsParser = require('@typescript-eslint/parser');
 const tsPlugin = require('@typescript-eslint/eslint-plugin');
 
 module.exports = {
-  root: true,
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: './tsconfig.json',
+    project: 'tsconfig.json',
     tsconfigRootDir: __dirname,
     sourceType: 'module',
-    ecmaVersion: 2021,
   },
+  plugins: ['@typescript-eslint/eslint-plugin', 'import', 'promise'],
+  extends: [
+    'plugin:@typescript-eslint/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+    'plugin:promise/recommended',
+  ],
+  root: true,
   env: {
     node: true,
-    es2021: true,
+    jest: true,
   },
-  plugins: ['@typescript-eslint'],
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended'
-  ],
-  ignorePatterns: [
-    'dist/**',
-    'prisma/**',
-    '*.config.js',
-    'jest.config.js',
-    'node_modules/**'
-  ],
+  ignorePatterns: ['.eslintrc.js', 'dist', 'node_modules'],
+  rules: {
+    '@typescript-eslint/interface-name-prefix': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    'import/no-unresolved': 'off',
+    'import/no-named-as-default': 'warn',
+    'import/no-named-as-default-member': 'warn',
+    'promise/catch-or-return': 'warn',
+    'n/no-missing-import': 'off',
+    'n/no-unresolved': 'off',
+  },
   settings: {
-    'import/parsers': {
-      '@typescript-eslint/parser': ['.ts', '.tsx']
-    },
     'import/resolver': {
       typescript: {
         alwaysTryTypes: true,
-        project: './tsconfig.json'
-      }
-    }
+        project: './tsconfig.json',
+      },
+      node: {
+        extensions: ['.js', '.ts'],
+      },
+    },
   },
-  rules: {
-    'no-unused-vars': 'warn',
-    'no-undef': 'off',
-    '@typescript-eslint/no-explicit-any': 'warn',
-    'import/no-unresolved': 'off',
-    'import/no-missing-import': 'off',
-    'import/no-named-as-default': 'off',
-    'import/extensions': 'off',
-    'n/no-missing-import': 'off',
-    'n/no-unresolved': 'off'
-  }
 };
 
 // Top-level ignores for flat config

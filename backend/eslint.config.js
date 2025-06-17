@@ -15,6 +15,8 @@ module.exports = tseslint.config(
       parserOptions: {
         project: './tsconfig.json',
         tsconfigRootDir: __dirname,
+        ecmaVersion: 'latest',
+        sourceType: 'module',
       },
       globals: {
         ...globals.node,
@@ -26,6 +28,13 @@ module.exports = tseslint.config(
       'n': eslintPluginN,
       'promise': eslintPluginPromise,
     },
+    settings: {
+      'import/resolver': {
+        node: {
+          extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
+        }
+      }
+    },
     rules: {
       ...tseslint.configs.recommended.rules,
       ...eslintPluginImport.configs.recommended.rules,
@@ -36,6 +45,18 @@ module.exports = tseslint.config(
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-var-requires': 'off',
       'no-undef': 'off',
+      'import/no-unresolved': 'off',
+      'import/named': 'error',
+      'import/default': 'error',
+      'import/namespace': 'error',
+      'n/no-missing-import': 'off',
+      'promise/catch-or-return': 'error',
+      'promise/no-return-wrap': 'error',
+      'promise/param-names': 'error',
+      'promise/no-native': 'off',
+      'promise/no-callback-in-promise': 'warn',
+      'promise/no-promise-in-callback': 'warn',
+      'promise/no-nesting': 'warn',
     },
   }
 ); 

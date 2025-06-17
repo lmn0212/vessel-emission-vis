@@ -1,4 +1,4 @@
-import Decimal from 'decimal.js';
+import { Decimal } from 'decimal.js';
 import { calculatePPSCCBaselines } from './calculate-pp-scc-baselines.util';
 import ppFactors from '../data/pp-reference.json';
 

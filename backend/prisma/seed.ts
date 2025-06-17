@@ -96,11 +96,13 @@ async function main() {
   }
 }
 
-main()
-  .catch((error) => {
+(async () => {
+  try {
+    await main();
+  } catch (error) {
     console.error('Error seeding database:', error);
-    throw error;
-  })
-  .finally(async () => {
+    throw error; // Let the error propagate naturally
+  } finally {
     await prisma.$disconnect();
-  }); 
+  }
+})(); 
