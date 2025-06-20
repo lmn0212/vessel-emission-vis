@@ -45,3 +45,16 @@ export interface Emission {
   met2wco2ew2w: number;
   aet2wco2ew2w: number;
 } 
+
+export interface Factor {
+  RowID: number;
+  Category: string;
+  VesselTypeID: number;
+  Size: "DWT";
+  Traj: "MIN";
+  a: number;
+  b: number;
+  c: number;
+  d: number;
+  e: number;
+}
